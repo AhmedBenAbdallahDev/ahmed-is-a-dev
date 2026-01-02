@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { RetroChat } from "~/components/retro-chat/retro-chat";
 import TerminalBoot from "~/components/TerminalBoot";
-import HackerBackground from "~/components/HackerBackground";
 import GlitchEffects from "~/components/GlitchEffects";
 import Noise from "~/components/noise/noise";
 import TargetCursor from "~/components/target-cursor/target-cursor";
@@ -12,7 +11,7 @@ import { AnimatePresence, motion } from "framer-motion";
 const SIDEBAR_LOGS = [
   "ERR_SIGNAL_LOSS",
   "DECRYPTING_PACKET_331",
-  "XYLARIS_RELAY_OK",
+  "AUTO_RELAY_OK",
   "SYNCING_BIO_METRICS",
   "ATMOSPHERE_STABLE",
   "SOLAR_FLARE_DETECTED",
@@ -45,7 +44,7 @@ export default function FbxPage() {
   }, [bootComplete]);
 
   return (
-    <main className="relative w-[100vw] h-[100vh] bg-black overflow-hidden font-mono selection:bg-green-500/30 selection:text-white">
+    <main className="relative w-[100vw] h-[100vh] bg-black overflow-hidden font-mono selection:bg-red-500/30 selection:text-white">
       <AnimatePresence>
         {!bootComplete && (
           <TerminalBoot onComplete={() => setBootComplete(true)} />
@@ -63,19 +62,18 @@ export default function FbxPage() {
             transition={{ duration: 1.5, ease: "easeOut" }}
             className="relative w-full h-full flex items-center justify-center bg-[#050505]"
           >
-            <HackerBackground />
 
             {/* Fancy ARG HUD - Left Side Logs */}
             <motion.div
               initial={{ x: -100, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              className="absolute left-10 top-1/2 -translate-y-1/2 w-48 h-[500px] border border-green-900/30 bg-black/40 backdrop-blur-sm p-4 text-[9px] text-green-500/60 overflow-hidden"
+              className="absolute left-10 top-1/2 -translate-y-1/2 w-48 h-[500px] border border-red-900/30 bg-black/40 backdrop-blur-sm p-4 text-[9px] text-red-500/60 overflow-hidden"
             >
-              <div className="mb-4 border-b border-green-900/30 pb-2 font-bold tracking-widest text-green-500 uppercase">System Logs</div>
+              <div className="mb-4 border-b border-red-900/30 pb-2 font-bold tracking-widest text-red-500 uppercase">System Logs</div>
               <div className="space-y-1">
                 {logs.map((log, i) => (
                   <div key={i} className="animate-in fade-in slide-in-from-left-2 duration-300">
-                    <span className="text-green-900">[{new Date().toLocaleTimeString([], { hour12: false })}]</span> {log}
+                    <span className="text-red-900">[{new Date().toLocaleTimeString([], { hour12: false })}]</span> {log}
                   </div>
                 ))}
               </div>
@@ -85,33 +83,33 @@ export default function FbxPage() {
             <motion.div
               initial={{ x: 100, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              className="absolute right-10 top-1/2 -translate-y-1/2 w-48 h-[500px] border border-green-900/30 bg-black/40 backdrop-blur-sm p-4 text-[9px] text-green-500/60 overflow-hidden flex flex-col justify-end"
+              className="absolute right-10 top-1/2 -translate-y-1/2 w-48 h-[500px] border border-red-900/30 bg-black/40 backdrop-blur-sm p-4 text-[9px] text-red-500/60 overflow-hidden flex flex-col justify-end"
             >
               <div className="space-y-4">
-                <div className="border-t border-green-900/30 pt-2">
-                  <div className="text-green-900 uppercase mb-1">Packet Stream</div>
-                  <div className="grid grid-cols-2 gap-1 text-green-500/40">
+                <div className="border-t border-red-900/30 pt-2">
+                  <div className="text-red-900 uppercase mb-1">Packet Stream</div>
+                  <div className="grid grid-cols-2 gap-1 text-red-500/40">
                     <DataFeed /> <DataFeed />
                     <DataFeed /> <DataFeed />
                     <DataFeed /> <DataFeed />
                   </div>
                 </div>
-                <div className="border-t border-green-900/30 pt-2">
-                  <div className="text-green-900 uppercase mb-1">Encryption Cache</div>
-                  <div className="animate-pulse text-green-500 text-xs text-center">BUFFER_SYNCED</div>
+                <div className="border-t border-red-900/30 pt-2">
+                  <div className="text-red-900 uppercase mb-1">Encryption Cache</div>
+                  <div className="animate-pulse text-red-500 text-xs text-center">BUFFER_SYNCED</div>
                 </div>
               </div>
             </motion.div>
 
             {/* Fancy ARG HUD - Center Frame */}
             <div className="absolute inset-0 border-[40px] border-black/80 pointer-events-none z-10" />
-            <div className="absolute inset-0 border border-green-900/10 pointer-events-none z-10" />
+            <div className="absolute inset-0 border border-red-900/10 pointer-events-none z-10" />
 
             {/* Decorative Corner Elements */}
-            <div className="absolute top-14 left-14 w-10 h-10 border-t-2 border-l-2 border-green-700/50 z-20" />
-            <div className="absolute top-14 right-14 w-10 h-10 border-t-2 border-r-2 border-green-700/50 z-20" />
-            <div className="absolute bottom-14 left-14 w-10 h-10 border-b-2 border-l-2 border-green-700/50 z-20" />
-            <div className="absolute bottom-14 right-14 w-10 h-10 border-b-2 border-r-2 border-green-700/50 z-20" />
+            <div className="absolute top-14 left-14 w-10 h-10 border-t-2 border-l-2 border-red-700/50 z-20" />
+            <div className="absolute top-14 right-14 w-10 h-10 border-t-2 border-r-2 border-red-700/50 z-20" />
+            <div className="absolute bottom-14 left-14 w-10 h-10 border-b-2 border-l-2 border-red-700/50 z-20" />
+            <div className="absolute bottom-14 right-14 w-10 h-10 border-b-2 border-r-2 border-red-700/50 z-20" />
 
             {/* Original Chat Container Restored & Weighted */}
             <motion.div
@@ -124,7 +122,7 @@ export default function FbxPage() {
             </motion.div>
 
             {/* Atmospheric Overlay Texts */}
-            <div className="absolute top-10 w-full flex justify-center text-[10px] text-green-800 tracking-[0.5em] uppercase z-20">
+            <div className="absolute top-10 w-full flex justify-center text-[10px] text-red-800 tracking-[0.5em] uppercase z-20">
               Direct Terminal Link - AB_DEV_NODE_07
             </div>
           </motion.div>
@@ -133,7 +131,7 @@ export default function FbxPage() {
 
       {/* Persistent Full-Screen Overlays - Topmost Layer */}
       <div className="fixed inset-0 z-[1000] pointer-events-none">
-        <Noise patternAlpha={18} patternRefreshInterval={3} />
+        <Noise patternAlpha={10} patternRefreshInterval={3} />
         <GlitchEffects />
       </div>
     </main>

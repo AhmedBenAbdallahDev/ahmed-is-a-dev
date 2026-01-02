@@ -208,7 +208,7 @@ export const RetroChat = () => {
 
   return (
     <div className="w-full h-full p-2 sm:p-4 md:p-6 flex items-start justify-center overflow-x-hidden">
-      <div className="w-full max-w-4xl h-full border-2 border-green-700 bg-green-950/70 relative overflow-hidden">
+      <div className="w-full max-w-4xl h-full border-2 border-red-900 bg-red-950/70 relative overflow-hidden">
         <div className="relative w-full h-[calc(100%-64px)] overflow-hidden">
           <Noise patternAlpha={25} />
 
@@ -216,7 +216,7 @@ export const RetroChat = () => {
             ref={chatContainerRef}
             onScroll={handleChatScroll}
             className={
-              "w-full h-full p-4 text-green-600 retro-text overflow-y-auto overflow-x-hidden scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style]:none [scrollbar-width]:none"
+              "w-full h-full p-4 text-red-600 retro-text overflow-y-auto overflow-x-hidden scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style]:none [scrollbar-width]:none"
             }
           >
             {history.map((message, index) => (
@@ -247,7 +247,7 @@ export const RetroChat = () => {
             sendMessageMutation.mutate({ message, history });
             inputRef.current?.focus();
           }}
-          className="w-full h-[64px] border-t-2 border-green-700 flex gap-2 overflow-x-hidden min-w-0"
+          className="w-full h-[64px] border-t-2 border-red-900 flex gap-2 overflow-x-hidden min-w-0"
         >
           <input
             type="text"
@@ -257,14 +257,14 @@ export const RetroChat = () => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             autoFocus
-            className="text-xl text-green-600 w-full h-full px-3 bg-transparent border-none outline-none border-r-2 border-green-700 relative cursor-target min-w-0 flex-1"
+            className="text-xl text-red-600 w-full h-full px-3 bg-transparent border-none outline-none border-r-2 border-red-900 relative cursor-target min-w-0 flex-1"
           />
           <button
             disabled={isLoading || !message.trim()}
-            className="bg-green-700 text-white px-3 py-2 w-[64px] cursor-target flex items-center justify-center"
+            className="bg-red-800 text-white px-3 py-2 w-[64px] cursor-target flex items-center justify-center"
           >
             {isLoading ? (
-              <IconPlayerRecordFilled color="#006400" className="animate-pulse" />
+              <IconPlayerRecordFilled color="#7f1d1d" className="animate-pulse" />
             ) : (
               <IconArrowRight />
             )}

@@ -7,7 +7,7 @@ interface NoiseProps {
 
 const Noise: React.FC<NoiseProps> = ({
   patternRefreshInterval = 3,
-  patternAlpha = 15,
+  patternAlpha = 8,
 }) => {
   const grainRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -18,19 +18,20 @@ const Noise: React.FC<NoiseProps> = ({
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
-    // Use a smaller resolution for performance, upscaled by the browser
-    const canvasSize = 256;
+    // High resolution for ultra-fine grain
+    const canvasSize = 1024;
     canvas.width = canvasSize;
     canvas.height = canvasSize;
 
     // Pre-generate a set of noise frames
-    const frameCount = 10;
+    const frameCount = 8;
     const frames: ImageData[] = [];
 
     for (let f = 0; f < frameCount; f++) {
       const imageData = ctx.createImageData(canvasSize, canvasSize);
       const data = imageData.data;
       for (let i = 0; i < data.length; i += 4) {
+        // More subtle random distribution
         const value = Math.random() * 255;
         data[i] = value;
         data[i + 1] = value;
@@ -53,7 +54,11 @@ const Noise: React.FC<NoiseProps> = ({
       animationId = window.requestAnimationFrame(loop);
     };
 
-    loop();
+    const startLoop = () => {
+      animationId = window.requestAnimationFrame(loop);
+    };
+
+    startLoop();
 
     return () => {
       window.cancelAnimationFrame(animationId);
@@ -62,10 +67,9 @@ const Noise: React.FC<NoiseProps> = ({
 
   return (
     <canvas
-      className="pointer-events-none fixed inset-0 h-full w-full opacity-100"
+      className="pointer-events-none fixed inset-0 h-full w-full opacity-[0.4] mix-blend-overlay"
       ref={grainRef}
       style={{
-        imageRendering: "pixelated",
         objectFit: "cover",
       }}
     />
