@@ -208,7 +208,7 @@ export const RetroChat = () => {
 
   return (
     <div className="w-full h-full p-2 sm:p-4 md:p-6 flex items-start justify-center overflow-x-hidden">
-      <div className="w-full max-w-4xl h-full border-2 border-green-700/50 bg-green-950/40 relative overflow-hidden shadow-[0_0_50px_rgba(0,50,0,0.2),inset_0_0_30px_rgba(0,30,0,0.5)]">
+      <div className="w-full max-w-4xl h-full border-2 border-green-700/50 bg-black relative overflow-hidden shadow-[0_0_50px_rgba(0,50,0,0.2),inset_0_0_30px_rgba(0,30,0,0.5)]">
         <div className="relative w-full h-[calc(100%-64px)] overflow-hidden">
           {/* Enhanced "Cool" original grain */}
           <Noise patternAlpha={35} patternRefreshInterval={1} />
@@ -248,7 +248,7 @@ export const RetroChat = () => {
             sendMessageMutation.mutate({ message, history });
             inputRef.current?.focus();
           }}
-          className="w-full h-[64px] border-t-2 border-green-700/30 flex gap-2 overflow-x-hidden min-w-0 bg-green-950/40 relative z-20 backdrop-blur-md"
+          className="w-full h-[64px] border-t-2 border-green-700/30 flex gap-2 overflow-x-hidden min-w-0 bg-black relative z-20 backdrop-blur-md"
         >
           <input
             type="text"
