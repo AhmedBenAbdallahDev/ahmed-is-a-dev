@@ -51,51 +51,51 @@ export const RetroChat = () => {
   // we keep auto-scrolling regardless of user's scroll position until typing finishes.
   const scrollAnimationRef = useRef<number | null>(null);
   const lastScrollHeightRef = useRef<number>(0);
-  
+
   const scrollToBottom = (smooth = true) => {
     const el = chatContainerRef.current;
     if (!el) return;
-    
+
     const targetHeight = el.scrollHeight;
     const currentScroll = el.scrollTop;
     const clientHeight = el.clientHeight;
     const targetScroll = targetHeight - clientHeight;
-    
+
     // If already at bottom or very close, don't animate
     if (Math.abs(currentScroll - targetScroll) < 2) return;
-    
+
     if (scrollAnimationRef.current) {
       cancelAnimationFrame(scrollAnimationRef.current);
     }
-    
+
     if (!smooth) {
       el.scrollTop = targetScroll;
       return;
     }
-    
+
     // Ultra smooth scroll with easing
     const startScroll = currentScroll;
     const distance = targetScroll - startScroll;
     const startTime = performance.now();
     const duration = Math.min(300, Math.abs(distance) * 0.5); // Adaptive duration
-    
+
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      
+
       // Ease out cubic for ultra smooth feel
       const easeOut = 1 - Math.pow(1 - progress, 3);
       const newScroll = startScroll + (distance * easeOut);
-      
+
       el.scrollTop = newScroll;
-      
+
       if (progress < 1) {
         scrollAnimationRef.current = requestAnimationFrame(animate);
       } else {
         scrollAnimationRef.current = null;
       }
     };
-    
+
     scrollAnimationRef.current = requestAnimationFrame(animate);
   };
 
@@ -116,7 +116,7 @@ export const RetroChat = () => {
     if (!el) return;
     // while forced auto-scroll is active, ignore user scroll inputs
     if (forcedAutoScrollRef.current) return;
-    
+
     const distanceFromBottom = el.scrollHeight - (el.scrollTop + el.clientHeight);
     // Use a larger threshold and debounce to prevent jitter
     shouldAutoScrollRef.current = distanceFromBottom < 100;
@@ -154,10 +154,10 @@ export const RetroChat = () => {
         { role: "model" as const, parts: [{ text: "" }] },
       ]);
 
-  // Animate text into the last history entry
-  let idx = 0;
-  // Force auto-scroll while the model is typing
-  forcedAutoScrollRef.current = true;
+      // Animate text into the last history entry
+      let idx = 0;
+      // Force auto-scroll while the model is typing
+      forcedAutoScrollRef.current = true;
       const chunk = 2; // characters per tick
       const tickMs = 24; // ~40fps
 
@@ -209,7 +209,6 @@ export const RetroChat = () => {
   return (
     <div className="w-full h-full p-2 sm:p-4 md:p-6 flex items-start justify-center overflow-x-hidden">
       <div className="w-full max-w-4xl h-full border-2 border-green-700 bg-green-950/70 relative overflow-hidden">
-        <TargetCursor spinDuration={7} />
         <div className="relative w-full h-[calc(100%-64px)] overflow-hidden">
           <Noise patternAlpha={25} />
 
@@ -219,55 +218,61 @@ export const RetroChat = () => {
             className={
               "w-full h-full p-4 text-green-600 retro-text overflow-y-auto overflow-x-hidden scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style]:none [scrollbar-width]:none"
             }
-        >
-          {history.map((message, index) => (
-            <p
-              key={message.parts[0]?.text ?? index}
-              className="cursor-target mb-2"
-            >
-              <FuzzyText baseIntensity={0.008} enableHover={false} containerWidth={chatWidth}>
-                {message.role}: {message.parts[0]!.text}
-              </FuzzyText>
-            </p>
-          ))}
-          <FuzzyText baseIntensity={0.008} enableHover={false} containerWidth={chatWidth}>
-            {messages.length > 0 && "model: "}
-            {messages}
-          </FuzzyText>
-        </div>
-      </div>
+          >
+            {history.map((message, index) => (
+              <p
+                key={index}
+                className="cursor-target mb-2"
+              >
+                <FuzzyText baseIntensity={0.008} enableHover={false} containerWidth={chatWidth}>
+                  {message.role === 'user' ? '[USR]' : '[A.BEN]'} {">"} {message.parts[0]!.text}
+                </FuzzyText>
+              </p>
+            ))}
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          sendMessageMutation.mutate({ message, history });
-          // refocus immediately so the input doesn't lose focus when submitting
-          inputRef.current?.focus();
-        }}
-        className="w-full h-[64px] border-t-2 border-green-700 flex gap-2 overflow-x-hidden min-w-0"
-      >
-        <input
-          type="text"
-          disabled={isLoading}
-          placeholder={isLoading ? "Please wait..." : "Message..."}
-          ref={inputRef}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          autoFocus
-          className="text-2xl text-green-600 w-full h-full px-3 bg-transparent border-none outline-none border-r-2 border-green-700 relative cursor-target min-w-0 flex-1"
-        />
-        <button
-          disabled={isLoading}
-          className="bg-green-700 text-white px-3 py-2 w-[64px] cursor-target flex items-center justify-center"
+            {messages.length > 0 && (
+              <p className="cursor-target">
+                <FuzzyText baseIntensity={0.008} enableHover={false} containerWidth={chatWidth}>
+                  [A.BEN] {">"} {messages}
+                </FuzzyText>
+              </p>
+            )}
+          </div>
+        </div>
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!message.trim() || isLoading) return;
+            sendMessageMutation.mutate({ message, history });
+            inputRef.current?.focus();
+          }}
+          className="w-full h-[64px] border-t-2 border-green-700 flex gap-2 overflow-x-hidden min-w-0"
         >
-          {isLoading ? (
-            <IconPlayerRecordFilled color="#006400" className="animate-pulse" />
-          ) : (
-            <IconArrowRight />
-          )}
-        </button>
-      </form>
+          <input
+            type="text"
+            disabled={isLoading}
+            placeholder={isLoading ? "TRANSMITTING..." : "TYPE COMMAND..."}
+            ref={inputRef}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            autoFocus
+            className="text-xl text-green-600 w-full h-full px-3 bg-transparent border-none outline-none border-r-2 border-green-700 relative cursor-target min-w-0 flex-1"
+          />
+          <button
+            disabled={isLoading || !message.trim()}
+            className="bg-green-700 text-white px-3 py-2 w-[64px] cursor-target flex items-center justify-center"
+          >
+            {isLoading ? (
+              <IconPlayerRecordFilled color="#006400" className="animate-pulse" />
+            ) : (
+              <IconArrowRight />
+            )}
+          </button>
+        </form>
       </div>
     </div>
+
+
   );
 };

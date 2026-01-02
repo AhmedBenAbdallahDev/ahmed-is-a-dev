@@ -1,18 +1,12 @@
 import React, { useRef, useEffect } from "react";
 
 interface NoiseProps {
-  patternSize?: number;
-  patternScaleX?: number;
-  patternScaleY?: number;
   patternRefreshInterval?: number;
   patternAlpha?: number;
 }
 
 const Noise: React.FC<NoiseProps> = ({
-  patternSize = 250,
-  patternScaleX = 1,
-  patternScaleY = 1,
-  patternRefreshInterval = 2,
+  patternRefreshInterval = 3,
   patternAlpha = 15,
 }) => {
   const grainRef = useRef<HTMLCanvasElement | null>(null);
@@ -24,24 +18,18 @@ const Noise: React.FC<NoiseProps> = ({
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
-    let frame = 0;
-    let animationId: number;
+    // Use a smaller resolution for performance, upscaled by the browser
+    const canvasSize = 256;
+    canvas.width = canvasSize;
+    canvas.height = canvasSize;
 
-    const canvasSize = 1024;
+    // Pre-generate a set of noise frames
+    const frameCount = 10;
+    const frames: ImageData[] = [];
 
-    const resize = () => {
-      if (!canvas) return;
-      canvas.width = canvasSize;
-      canvas.height = canvasSize;
-
-      canvas.style.width = "100vw";
-      canvas.style.height = "100vh";
-    };
-
-    const drawGrain = () => {
+    for (let f = 0; f < frameCount; f++) {
       const imageData = ctx.createImageData(canvasSize, canvasSize);
       const data = imageData.data;
-
       for (let i = 0; i < data.length; i += 4) {
         const value = Math.random() * 255;
         data[i] = value;
@@ -49,43 +37,40 @@ const Noise: React.FC<NoiseProps> = ({
         data[i + 2] = value;
         data[i + 3] = patternAlpha;
       }
+      frames.push(imageData);
+    }
 
-      ctx.putImageData(imageData, 0, 0);
-    };
+    let frameIndex = 0;
+    let tick = 0;
+    let animationId: number;
 
     const loop = () => {
-      if (frame % patternRefreshInterval === 0) {
-        drawGrain();
+      if (tick % patternRefreshInterval === 0) {
+        ctx.putImageData(frames[frameIndex]!, 0, 0);
+        frameIndex = (frameIndex + 1) % frameCount;
       }
-      frame++;
+      tick++;
       animationId = window.requestAnimationFrame(loop);
     };
 
-    window.addEventListener("resize", resize);
-    resize();
     loop();
 
     return () => {
-      window.removeEventListener("resize", resize);
       window.cancelAnimationFrame(animationId);
     };
-  }, [
-    patternSize,
-    patternScaleX,
-    patternScaleY,
-    patternRefreshInterval,
-    patternAlpha,
-  ]);
+  }, [patternRefreshInterval, patternAlpha]);
 
   return (
     <canvas
-      className="pointer-events-none absolute top-0 left-0 h-screen w-screen"
+      className="pointer-events-none fixed inset-0 h-full w-full opacity-100"
       ref={grainRef}
       style={{
         imageRendering: "pixelated",
+        objectFit: "cover",
       }}
     />
   );
 };
 
 export default Noise;
+

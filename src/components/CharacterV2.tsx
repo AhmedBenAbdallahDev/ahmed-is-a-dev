@@ -238,17 +238,17 @@ export default function Character() {
           if (object.name == "vanguard_Mesh") {
             object.castShadow = true;
             object.receiveShadow = true;
-            //object.material.envMapIntensity = 0.5;
             object.material.metalness = 1.0;
-            object.material.roughness = 0.2;
-            object.material.color.set(1, 1, 1);
-            object.material.metalnessMap = object.material.map;
+            object.material.roughness = 0.3;
+            object.material.color.set(0.5, 1, 0.5); // Slight green tint
+            object.material.emissive = new THREE.Color(0x00ff41);
+            object.material.emissiveIntensity = 0.1;
           } else {
             object.material.metalness = 1;
             object.material.roughness = 0;
             object.material.transparent = true;
-            object.material.opacity = 0.8;
-            object.material.color.set(1, 1, 1);
+            object.material.opacity = 0.6;
+            object.material.color.set(0, 1, 0);
           }
         }
       });
@@ -281,28 +281,24 @@ export default function Character() {
     loader.load("models/rusted-scifi-hallway.glb", function (gltf) {
       const building = gltf.scene;
 
-      building.rotation.y = Math.PI; // Rotate 180 degrees around Y axis
-
-      building.position.y = 0.5; // Lift the building up slightly
-
-      // building.position.set(0, 0, 0); // Adjust as needed
-      // building.scale.setScalar(30); // Adjust scale if needed
+      building.rotation.y = Math.PI;
+      building.position.y = 0.5;
 
       building.traverse(function (object) {
         if (object instanceof THREE.Mesh) {
           object.castShadow = true;
           object.receiveShadow = true;
-          object.material.envMapIntensity = 0.5;
-          object.material.metalness = 1.0;
-          object.material.roughness = 0.2;
-          object.material.color.set(1, 1, 1);
-          object.material.metalnessMap = object.material.map;
+          object.material.envMapIntensity = 0.2;
+          object.material.metalness = 0.8;
+          object.material.roughness = 0.5;
+          object.material.color.set(0.2, 0.4, 0.2); // Moody green dark
         }
       });
 
       scene.add(building);
     });
   }
+
 
   function updateCharacter(delta: number) {
     const fade = controls.fadeDuration;

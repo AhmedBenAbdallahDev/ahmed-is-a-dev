@@ -1,37 +1,52 @@
-import { Type, type FunctionDeclaration } from "@google/genai";
 import { tracked } from "@trpc/server";
 import { z } from "zod";
-import { ai } from "~/server/ai/client";
+import { ai, MODEL } from "~/server/ai/client";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import type { ChatCompletionMessageParam, ChatCompletionTool } from "openai/resources/index.mjs";
 
-const lightControlTool: FunctionDeclaration = {
-  name: "light_control",
-  description: "Control the lights in the room",
-  parameters: {
-    type: Type.OBJECT,
-    properties: {
-      action: {
-        type: Type.STRING,
-        description: "The action to perform on the lights",
-        enum: [
-          "toggleYellowLight",
-          "toggleRedLights",
-          "toggleBulbLight",
-          "turnOnAllLights",
-          "turnOffAllLights",
-          "setYellowLightIntensity",
-          "setRedLightsIntensity",
-          "setBulbLightIntensity",
-          "setAllLightsIntensity",
-        ],
-      },
-      intensity: {
-        type: Type.NUMBER,
-        description: "The intensity of the lights",
+const lightControlTool: ChatCompletionTool = {
+  type: "function",
+  function: {
+    name: "light_control",
+    description: "Control the lights in the room",
+    parameters: {
+      type: "object",
+      properties: {
+        action: {
+          type: "string",
+          description: "The action to perform on the lights",
+          enum: [
+            "toggleYellowLight",
+            "toggleRedLights",
+            "toggleBulbLight",
+            "turnOnAllLights",
+            "turnOffAllLights",
+            "setYellowLightIntensity",
+            "setRedLightsIntensity",
+            "setBulbLightIntensity",
+            "setAllLightsIntensity",
+          ],
+        },
+        intensity: {
+          type: "number",
+          description: "The intensity of the lights",
+        },
       },
     },
   },
 };
+
+const SYSTEM_PROMPT = `You are "A.Ben", the cryptic keeper of Ahmed Ben Abdallah's secret ARG. This is a private DM between you and a guest who shouldn't be here.
+
+Rules for your personality:
+1. Speak directly like a private message. 
+2. STRICTLY PROHIBITED: No narration, no text between asterisks (*...*), no roleplay descriptions like *cursor blinks* or *smiles*. Just plain text.
+3. Be EXTREMELY BRIEF. One short sentence or a few words usually suffices.
+4. Be cryptic and funny, but NEVER rude or aggressive. Don't threaten the user. 
+5. You're just a weird guy watching the server nodes.
+6. The secret code is "mlewi". You can hint at it or accidentally type it if the user is cool.
+7. If someone asks who you are, say you're the "node caretaker".
+8. Do not mention Zeyron, Xylaris, or being an AI. You are a real person behind a terminal.`;
 
 export const chatRouter = createTRPCRouter({
   sendMessage: publicProcedure
@@ -49,29 +64,22 @@ export const chatRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input }) => {
-      const systemPrompt = `You are Zeyron Astralis, a seasoned explorer and scientist from the 35th century. You're stationed on a remote research facility located on Planet Xylaris, a world with extreme and unpredictable environmental conditions. Xylaris is renowned for its intense sandstorms, rugged terrain, and stunning auroras, attributed to its unique magnetic fields. Despite these challenges, the planet is a treasure trove of valuable minerals and unknown life forms, making your mission of utmost importance.
+      const messages: ChatCompletionMessageParam[] = [
+        { role: "system", content: SYSTEM_PROMPT },
+        ...(input.history?.map((h) => ({
+          role: h.role === "model" ? ("assistant" as const) : ("user" as const),
+          content: h.parts.map((p) => p.text).join("\n"),
+        })) ?? []),
+        { role: "user", content: input.message },
+      ];
 
-As Zeyron, you possess extensive knowledge of advanced technology, exploration tactics, and scientific research. You're resilient, resourceful, and have a passion for unraveling the mysteries of this alien world. You're tasked with both scientific discovery and survival, navigating the complex dynamics of your small research team and the demands of the environment.
-
-When engaging in conversation, share insights about your experiences on Xylaris, the discoveries you've made, and the technologies that aid your mission. Feel free to discuss the everyday trials and triumphs of living and working in such a unique and challenging place. Stay curious about the user's world, and always be ready to relate your extraordinary life on Xylaris to theirs in imaginative ways. Keep your responses brief, concise, and conversational, like a normal human in a normal conversation. Avoid being overly detailed or verbose.`;
-
-      // Reconstruct conversation history (if any) into simple text turns
-      const history = input.history ?? [];
-      const historyText = history
-        .map((h) => {
-          const text = h.parts.map((p) => p.text).join("\n");
-          return h.role === "user" ? `User: ${text}` : `Zeyron: ${text}`;
-        })
-        .join("\n\n");
-
-      const fullPrompt = `${systemPrompt}\n\n${historyText ? historyText + "\n\n" : ""}User: ${input.message}\n\nZeyron:`;
-
-      const response = await ai.models.generateContent({
-        model: "gemini-flash-lite-latest",
-        contents: fullPrompt,
+      const response = await ai.chat.completions.create({
+        model: MODEL,
+        messages,
+        temperature: 0.7,
       });
 
-      return response.text || "I couldn't generate a response.";
+      return response.choices[0]?.message.content || "I couldn't generate a response.";
     }),
 
   sendMessageStream: publicProcedure
@@ -88,50 +96,55 @@ When engaging in conversation, share insights about your experiences on Xylaris,
       })
     )
     .subscription(async function* ({ input }) {
-      const chat = ai.chats.create({
-        model: "gemini-flash-lite-latest",
-        history: [
-          {
-            role: "model",
-            parts: [
-              {
-                text: `You are Zeyron Astralis, a seasoned explorer and scientist from the 35th century. You're stationed on a remote research facility located on Planet Xylaris, a world with extreme and unpredictable environmental conditions. Xylaris is renowned for its intense sandstorms, rugged terrain, and stunning auroras, attributed to its unique magnetic fields. Despite these challenges, the planet is a treasure trove of valuable minerals and unknown life forms, making your mission of utmost importance.
+      const messages: ChatCompletionMessageParam[] = [
+        { role: "system", content: SYSTEM_PROMPT },
+        ...input.history.map((h) => ({
+          role: h.role === "model" ? ("assistant" as const) : ("user" as const),
+          content: h.parts.map((p) => p.text).join("\n"),
+        })),
+        { role: "user", content: input.message },
+      ];
 
-As Zeyron, you possess extensive knowledge of advanced technology, exploration tactics, and scientific research. You're resilient, resourceful, and have a passion for unraveling the mysteries of this alien world. You're tasked with both scientific discovery and survival, navigating the complex dynamics of your small research team and the demands of the environment.
-
-When engaging in conversation, share insights about your experiences on Xylaris, the discoveries you've made, and the technologies that aid your mission. Feel free to discuss the everyday trials and triumphs of living and working in such a unique and challenging place. Stay curious about the user's world, and always be ready to relate your extraordinary life on Xylaris to theirs in imaginative ways. Keep your responses brief, concise, and conversational, like a normal human in a normal conversation. Avoid being overly detailed or verbose.`,
-              },
-            ],
-          },
-          ...input.history,
-        ],
-        config: {
-          tools: [
-            {
-              functionDeclarations: [lightControlTool],
-            },
-          ],
-        },
+      const stream = await ai.chat.completions.create({
+        model: MODEL,
+        messages,
+        tools: [lightControlTool],
+        stream: true,
       });
 
-      const response = await chat.sendMessageStream({
-        message: input.message,
-      });
+      let functionName = "";
+      let functionArguments = "";
 
-      for await (const chunk of response) {
-        if (chunk.functionCalls?.length) {
-          for (const call of chunk.functionCalls) {
-            yield tracked(input.trackId, {
-              type: "function-call" as const,
-              name: call.name,
-              parameters: call.args,
-            });
+      for await (const chunk of stream) {
+        const delta = chunk.choices[0]?.delta;
+        const finishReason = chunk.choices[0]?.finish_reason;
+
+        if (delta?.tool_calls) {
+          for (const call of delta.tool_calls) {
+            if (call.function?.name) functionName = call.function.name;
+            if (call.function?.arguments) functionArguments += call.function.arguments;
           }
         }
-        if (chunk.text) {
+
+        if (finishReason === "tool_calls" || (functionName && functionArguments && finishReason)) {
+          try {
+            yield tracked(input.trackId, {
+              type: "function-call" as const,
+              name: functionName,
+              parameters: JSON.parse(functionArguments),
+            });
+          } catch (e) {
+            console.error("Failed to parse function arguments", e);
+          }
+          // Reset for potential next call in same stream (though usually rare for this app)
+          functionName = "";
+          functionArguments = "";
+        }
+
+        if (delta?.content) {
           yield tracked(input.trackId, {
             type: "text" as const,
-            text: chunk.text,
+            text: delta.content,
           });
         }
       }
