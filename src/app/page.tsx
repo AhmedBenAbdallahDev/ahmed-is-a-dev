@@ -60,7 +60,7 @@ export default function FbxPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
-            className="relative w-full h-full flex items-center justify-center bg-[#020202]"
+            className="relative w-full h-full flex items-center justify-center bg-[#010401]"
           >
 
             {/* Fancy ARG HUD - Left Side Logs */}
