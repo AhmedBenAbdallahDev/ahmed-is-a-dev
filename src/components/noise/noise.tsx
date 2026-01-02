@@ -67,7 +67,7 @@ const Noise: React.FC<NoiseProps> = ({
 
   return (
     <canvas
-      className="pointer-events-none fixed inset-0 h-full w-full opacity-[0.4] mix-blend-overlay"
+      className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.4] mix-blend-overlay"
       ref={grainRef}
       style={{
         objectFit: "cover",

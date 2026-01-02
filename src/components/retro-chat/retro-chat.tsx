@@ -208,15 +208,16 @@ export const RetroChat = () => {
 
   return (
     <div className="w-full h-full p-2 sm:p-4 md:p-6 flex items-start justify-center overflow-x-hidden">
-      <div className="w-full max-w-4xl h-full border-2 border-red-900 bg-red-950/70 relative overflow-hidden">
+      <div className="w-full max-w-4xl h-full border-2 border-green-700 bg-black/90 relative overflow-hidden shadow-[0_0_30px_rgba(34,197,94,0.1)]">
         <div className="relative w-full h-[calc(100%-64px)] overflow-hidden">
-          <Noise patternAlpha={25} />
+          {/* Specific fine grain for chat area */}
+          <Noise patternAlpha={15} patternRefreshInterval={2} />
 
           <div
             ref={chatContainerRef}
             onScroll={handleChatScroll}
             className={
-              "w-full h-full p-4 text-red-600 retro-text overflow-y-auto overflow-x-hidden scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style]:none [scrollbar-width]:none"
+              "w-full h-full p-6 text-green-500 retro-text overflow-y-auto overflow-x-hidden scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style]:none [scrollbar-width]:none relative z-10"
             }
           >
             {history.map((message, index) => (
@@ -224,7 +225,7 @@ export const RetroChat = () => {
                 key={index}
                 className="cursor-target mb-2"
               >
-                <FuzzyText baseIntensity={0.008} enableHover={false} containerWidth={chatWidth}>
+                <FuzzyText baseIntensity={0.005} enableHover={false} containerWidth={chatWidth}>
                   {message.role === 'user' ? '[USR]' : '[A.BEN]'} {">"} {message.parts[0]!.text}
                 </FuzzyText>
               </p>
@@ -247,7 +248,7 @@ export const RetroChat = () => {
             sendMessageMutation.mutate({ message, history });
             inputRef.current?.focus();
           }}
-          className="w-full h-[64px] border-t-2 border-red-900 flex gap-2 overflow-x-hidden min-w-0"
+          className="w-full h-[64px] border-t-2 border-green-700 flex gap-2 overflow-x-hidden min-w-0 bg-black/80 relative z-20"
         >
           <input
             type="text"
@@ -257,14 +258,14 @@ export const RetroChat = () => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             autoFocus
-            className="text-xl text-red-600 w-full h-full px-3 bg-transparent border-none outline-none border-r-2 border-red-900 relative cursor-target min-w-0 flex-1"
+            className="text-xl text-green-500 w-full h-full px-3 bg-transparent border-none outline-none border-r-2 border-green-700 relative cursor-target min-w-0 flex-1 placeholder:text-green-900/50"
           />
           <button
             disabled={isLoading || !message.trim()}
-            className="bg-red-800 text-white px-3 py-2 w-[64px] cursor-target flex items-center justify-center"
+            className="bg-green-700 text-black px-3 py-2 w-[64px] cursor-target flex items-center justify-center hover:bg-green-500 transition-colors"
           >
             {isLoading ? (
-              <IconPlayerRecordFilled color="#7f1d1d" className="animate-pulse" />
+              <IconPlayerRecordFilled color="#052e16" className="animate-pulse" />
             ) : (
               <IconArrowRight />
             )}
