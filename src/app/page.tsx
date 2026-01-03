@@ -44,7 +44,7 @@ export default function FbxPage() {
   }, [bootComplete]);
 
   return (
-    <main className="relative w-[100vw] h-[100vh] bg-black overflow-hidden font-mono selection:bg-green-500/30 selection:text-white">
+    <main className="relative w-full h-[100dvh] bg-black overflow-hidden font-mono selection:bg-green-500/30 selection:text-white">
       <AnimatePresence>
         {!bootComplete && (
           <TerminalBoot onComplete={() => setBootComplete(true)} />
@@ -63,11 +63,11 @@ export default function FbxPage() {
             className="relative w-full h-full flex items-center justify-center bg-[#000000]"
           >
 
-            {/* Fancy ARG HUD - Left Side Logs */}
+            {/* Fancy ARG HUD - Left Side Logs (Hidden on Mobile) */}
             <motion.div
               initial={{ x: -100, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              className="absolute left-6 top-1/2 -translate-y-1/2 w-44 h-[500px] border border-green-900/20 bg-black/60 backdrop-blur-sm p-4 text-[9px] text-green-500/40 overflow-hidden"
+              className="hidden lg:flex absolute left-6 top-1/2 -translate-y-1/2 w-44 h-[500px] border border-green-900/20 bg-black/60 backdrop-blur-sm p-4 text-[9px] text-green-500/40 overflow-hidden flex-col"
             >
               <div className="mb-4 border-b border-green-900/30 pb-2 font-bold tracking-widest text-green-700 uppercase">System Logs</div>
               <div className="space-y-1">
@@ -79,11 +79,11 @@ export default function FbxPage() {
               </div>
             </motion.div>
 
-            {/* Fancy ARG HUD - Right Side Data Feed */}
+            {/* Fancy ARG HUD - Right Side Data Feed (Hidden on Mobile) */}
             <motion.div
               initial={{ x: 100, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              className="absolute right-6 top-1/2 -translate-y-1/2 w-44 h-[500px] border border-green-900/20 bg-black/60 backdrop-blur-sm p-4 text-[9px] text-green-500/40 overflow-hidden flex flex-col justify-end"
+              className="hidden lg:flex absolute right-6 top-1/2 -translate-y-1/2 w-44 h-[500px] border border-green-900/20 bg-black/60 backdrop-blur-sm p-4 text-[9px] text-green-500/40 overflow-hidden flex-col justify-end"
             >
               <div className="space-y-4">
                 <div className="border-t border-green-900/30 pt-2">
@@ -111,12 +111,12 @@ export default function FbxPage() {
             <div className="absolute bottom-14 left-14 w-10 h-10 border-b-2 border-l-2 border-green-900/40 z-20" />
             <div className="absolute bottom-14 right-14 w-10 h-10 border-b-2 border-r-2 border-green-900/40 z-20" />
 
-            {/* Original Chat Container Restored & Weighted */}
+            {/* Original Chat Container - Responsive Scaling */}
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.2 }}
-              className="relative z-30 w-[600px] h-[800px]"
+              className="relative z-30 w-full max-w-[600px] h-[70vh] md:h-[800px] px-4 md:px-0"
             >
               <RetroChat />
             </motion.div>
@@ -131,7 +131,7 @@ export default function FbxPage() {
 
       {/* Persistent Full-Screen Overlays - Topmost Layer */}
       <div className="fixed inset-0 z-[1000] pointer-events-none">
-        <Noise patternAlpha={8} patternRefreshInterval={3} />
+        <Noise patternAlpha={6} patternRefreshInterval={4} />
         <GlitchEffects />
       </div>
     </main>

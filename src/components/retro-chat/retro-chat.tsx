@@ -207,9 +207,9 @@ export const RetroChat = () => {
   });
 
   return (
-    <div className="w-full h-full p-2 sm:p-4 md:p-6 flex items-start justify-center overflow-x-hidden">
-      <div className="w-full max-w-4xl h-full border-2 border-green-700/50 bg-black relative overflow-hidden shadow-[0_0_50px_rgba(0,50,0,0.2),inset_0_0_30px_rgba(0,30,0,0.5)]">
-        <div className="relative w-full h-[calc(100%-64px)] overflow-hidden">
+    <div className="w-full h-full p-1 sm:p-2 md:p-6 flex items-start justify-center overflow-hidden">
+      <div className="w-full max-w-4xl h-full border-2 border-green-700/50 bg-black relative overflow-hidden shadow-[0_0_50px_rgba(0,50,0,0.2),inset_0_0_30px_rgba(0,30,0,0.5)] flex flex-col">
+        <div className="relative w-full flex-1 min-h-0 overflow-hidden">
           {/* Enhanced "Cool" original grain */}
           <Noise patternAlpha={35} patternRefreshInterval={1} />
 
@@ -225,7 +225,7 @@ export const RetroChat = () => {
                 key={index}
                 className="cursor-target mb-2"
               >
-                <FuzzyText baseIntensity={0.005} enableHover={false} containerWidth={chatWidth}>
+                <FuzzyText baseIntensity={0.003} enableHover={false} containerWidth={chatWidth}>
                   {message.role === 'user' ? '[USR]' : '[A.BEN]'} {">"} {message.parts[0]!.text}
                 </FuzzyText>
               </p>
@@ -258,7 +258,7 @@ export const RetroChat = () => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             autoFocus
-            className="text-xl text-green-500 w-full h-full px-3 bg-transparent border-none outline-none border-r-2 border-green-700 relative cursor-target min-w-0 flex-1 placeholder:text-green-900/50"
+            className="text-lg md:text-xl text-green-500 w-full h-full px-3 bg-transparent border-none outline-none border-r-2 border-green-700 relative cursor-target min-w-0 flex-1 placeholder:text-green-900/50"
           />
           <button
             disabled={isLoading || !message.trim()}

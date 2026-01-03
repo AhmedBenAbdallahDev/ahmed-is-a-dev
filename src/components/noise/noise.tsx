@@ -18,8 +18,8 @@ const Noise: React.FC<NoiseProps> = ({
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
-    // High resolution for ultra-fine grain
-    const canvasSize = 1024;
+    // Optimized resolution for performance
+    const canvasSize = 256;
     canvas.width = canvasSize;
     canvas.height = canvasSize;
 
