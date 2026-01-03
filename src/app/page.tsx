@@ -116,13 +116,13 @@ export default function FbxPage() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.2 }}
-              className="relative z-30 w-full max-w-[600px] h-[70vh] md:h-[800px] px-4 md:px-0"
+              className="relative z-30 w-full max-w-[600px] h-full md:h-[800px] p-2 md:p-0"
             >
               <RetroChat />
             </motion.div>
 
             {/* Atmospheric Overlay Texts */}
-            <div className="absolute top-10 w-full flex justify-center text-[10px] text-green-900 tracking-[1em] uppercase z-20 font-bold opacity-60">
+            <div className="absolute top-10 w-full flex justify-center text-[11px] text-green-900 tracking-[1em] uppercase z-20 font-bold opacity-60 font-doto">
               Direct Terminal Link - AB_DEV_NODE_07
             </div>
           </motion.div>

@@ -71,10 +71,10 @@ export default function TerminalBoot({ onComplete }: { onComplete: () => void })
         return (
             <div className="fixed inset-0 z-[1000] bg-black overflow-hidden flex items-center justify-center">
                 <Noise patternAlpha={80} patternRefreshInterval={1} />
-                <div className="absolute inset-0 flex items-center justify-center font-mono text-green-500 text-6xl font-black italic break-all opacity-50 px-20 text-center">
+                <div className="absolute inset-0 flex items-center justify-center font-doto text-green-500 text-6xl break-all opacity-50 px-20 text-center">
                     {Array.from({ length: 150 }).map(() => Math.random().toString(36)[2]).join('')}
                 </div>
-                <div className="relative z-10 text-green-400 text-4xl font-bold tracking-[1em] animate-pulse">
+                <div className="relative z-10 text-green-400 text-6xl font-black tracking-[0.5em] animate-pulse font-doto drop-shadow-[0_0_15px_rgba(34,197,94,0.8)]">
                     SIGNAL_INTERRUPT_
                 </div>
             </div>
@@ -83,8 +83,8 @@ export default function TerminalBoot({ onComplete }: { onComplete: () => void })
 
     if (rebootStep === "dark") {
         return (
-            <div className="fixed inset-0 z-[1000] bg-black flex items-center justify-center font-mono text-green-600">
-                <div className="text-xl tracking-[0.5em] animate-pulse">SYSTEM_REBOOTING_</div>
+            <div className="fixed inset-0 z-[1000] bg-black flex items-center justify-center font-doto text-green-600">
+                <div className="text-2xl tracking-[0.5em] animate-pulse">SYSTEM_REBOOTING_</div>
             </div>
         );
     }
@@ -104,9 +104,9 @@ export default function TerminalBoot({ onComplete }: { onComplete: () => void })
                 {bgData.join("\n")}
             </div>
 
-            <div className="relative z-10 p-6 md:p-12 h-full flex flex-col justify-between">
+            <div className="relative z-10 p-6 md:p-12 h-full flex flex-col justify-between font-doto">
                 <div>
-                    <pre className="text-[10px] md:text-[14px] leading-tight mb-8 text-green-700">
+                    <pre className="text-[10px] md:text-[14px] leading-tight mb-8 text-green-700 font-mono">
                         {`
  █████╗     ██████╗ ███████╗███╗   ██╗
 ██╔══██╗    ██╔══██╗██╔════╝████╗  ██║
@@ -134,7 +134,7 @@ export default function TerminalBoot({ onComplete }: { onComplete: () => void })
                     <div className="text-[8px] tracking-[1em] uppercase opacity-40 text-green-900">AHMED_BEN_ABDALLAH_DEV</div>
                 </div>
 
-                <div className="flex justify-between items-end opacity-30 text-[9px] text-green-500">
+                <div className="flex justify-between items-end opacity-30 text-[10px] text-green-500">
                     <div>
                         USR: [AHMED BEN ABDALLAH]<br />
                         NODE: AB_DEV_SECRET<br />
