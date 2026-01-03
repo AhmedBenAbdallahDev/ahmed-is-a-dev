@@ -44,7 +44,7 @@ export default function FbxPage() {
   }, [bootComplete]);
 
   return (
-    <main className="relative w-full h-[100dvh] bg-black overflow-hidden font-mono selection:bg-green-500/30 selection:text-white">
+    <main className="fixed inset-0 w-full h-[100dvh] bg-black overflow-hidden font-mono selection:bg-green-500/30 selection:text-white">
       <AnimatePresence>
         {!bootComplete && (
           <TerminalBoot onComplete={() => setBootComplete(true)} />
