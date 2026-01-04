@@ -6,19 +6,19 @@ import { Geist } from "next/font/google";
 import { TRPCReactProvider } from "~/trpc/react";
 
 export const metadata: Metadata = {
-  title: "AB_DEV_NODE_07",
-  description: "[ACCESS_RESTRICTED] - Node 07 is under diagnostic lockdown. Do not attempt to bypass. The Keeper is watching.",
+  title: "AB_DEV_NODE_07 | Ahmed Ben Abdallah",
+  description: "A secure terminal diagnostic link managed by Ahmed Ben Abdallah. [ACCESS_RESTRICTED] - Authorization required.",
   icons: [{ rel: "icon", url: "/favicon.svg", type: "image/svg+xml" }],
   openGraph: {
     title: "AB_DEV_NODE_07",
-    description: "Diagnostic Link: Established. Status: Restricted.",
+    description: "Secure Node Connection Established. Created by Ahmed Ben Abdallah.",
     images: [{ url: "/og-image.png", width: 1200, height: 630 }],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "AB_DEV_NODE_07",
-    description: "Connection Pending...",
+    description: "Connection Pending... System by AB_DEV",
     images: ["/og-image.png"],
   },
 };
