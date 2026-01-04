@@ -208,7 +208,7 @@ export const RetroChat = () => {
 
   return (
     <div className="w-full h-full p-1 sm:p-2 md:p-6 flex items-start justify-center overflow-hidden">
-      <div className="w-full max-w-4xl h-full border-2 border-green-700/50 bg-black relative overflow-hidden shadow-[0_0_30px_rgba(0,50,0,0.1),inset_0_0_15px_rgba(0,30,0,0.3)] flex flex-col">
+      <div className="w-full max-w-4xl h-full border-2 border-green-700/50 bg-black relative overflow-hidden shadow-[0_0_20px_rgba(0,50,0,0.1)] flex flex-col">
         <div className="relative w-full flex-1 min-h-0 overflow-hidden">
           {/* Enhanced "Cool" original grain */}
           <Noise patternAlpha={35} patternRefreshInterval={1} />

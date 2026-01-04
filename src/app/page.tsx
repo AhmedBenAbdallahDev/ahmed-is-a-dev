@@ -60,7 +60,7 @@ export default function FbxPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
-            className="relative w-full h-full flex items-center justify-center bg-[#000000]"
+            className="w-full h-full flex flex-col items-center justify-center bg-[#000000] relative"
           >
 
             {/* Fancy ARG HUD - Left Side Logs (Hidden on Mobile) */}
@@ -116,7 +116,7 @@ export default function FbxPage() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.2 }}
-              className="relative z-30 w-full max-w-[600px] h-full md:h-[800px] p-2 md:p-0"
+              className="relative z-30 w-full max-w-[600px] flex-1 min-h-0 p-2 md:p-0 flex flex-col justify-center"
             >
               <RetroChat />
             </motion.div>
