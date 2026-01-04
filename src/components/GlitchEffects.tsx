@@ -8,8 +8,8 @@ export default function GlitchEffects() {
       {/* CRT Scanlines with Green tint */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,50,0,0.1)_50%)] bg-[length:100%_4px] opacity-20" />
 
-      {/* Standard Vignette */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle,transparent_40%,rgba(0,0,0,0.5)_90%,rgba(0,0,0,0.8)_100%)]" />
+      {/* Standard Vignette (Hidden on Mobile) */}
+      <div className="hidden md:block absolute inset-0 bg-[radial-gradient(circle,transparent_40%,rgba(0,0,0,0.5)_90%,rgba(0,0,0,0.8)_100%)]" />
 
       {/* Subtle Flickering */}
       <div className="animate-flicker absolute inset-0 bg-green-900/1 opacity-[0.02]" />
